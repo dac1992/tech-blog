@@ -1,0 +1,164 @@
+---
+import config from 'virtual:starlight/user-config';
+import LanguageSelect from 'virtual:starlight/components/LanguageSelect';
+import Search from 'virtual:starlight/components/Search';
+import SiteTitle from 'virtual:starlight/components/SiteTitle';
+import SocialIcons from 'virtual:starlight/components/SocialIcons';
+import ThemeSelect from 'virtual:starlight/components/ThemeSelect';
+
+const shouldRenderSearch =
+	config.pagefind || config.components.Search !== '@astrojs/starlight/components/Search.astro';
+
+const currentPath = Astro.url.pathname;
+
+const LANGS = [
+	{ label: 'Java', key: 'java', href: '/java/overview/' },
+	{ label: 'Rust', key: 'rust', href: '/rust/overview/' },
+	{ label: 'Go', key: 'go', href: '/go/overview/' },
+	{ label: 'Python', key: 'python', href: '/python/overview/' },
+];
+
+function getActiveLang(path: string): string | null {
+	for (const lang of LANGS) {
+		if (path.startsWith(`/${lang.key}/`)) return lang.key;
+	}
+	return null;
+}
+
+const activeLang = getActiveLang(currentPath);
+---
+
+<div class="header">
+	<div class="title-wrapper sl-flex">
+		<SiteTitle />
+	</div>
+	<!-- 第二列：搜索 + 语言导航，保持三列 grid 布局不变 -->
+	<div class="sl-flex print:hidden center-column">
+		{shouldRenderSearch && <Search />}
+		<nav class="lang-nav sl-hidden md:sl-flex" aria-label="选择编程语言">
+			{LANGS.map((lang) => (
+				<a
+					href={lang.href}
+					class:list={['lang-tab', { active: lang.key === activeLang }]}
+					aria-current={lang.key === activeLang ? 'true' : undefined}
+				>
+					{lang.label}
+				</a>
+			))}
+		</nav>
+	</div>
+	<div class="sl-hidden md:sl-flex print:hidden right-group">
+		<div class="sl-flex social-icons">
+			<SocialIcons />
+		</div>
+		<ThemeSelect />
+		<LanguageSelect />
+	</div>
+</div>
+
+<style>
+	@layer starlight.core {
+		.header {
+			display: flex;
+			gap: var(--sl-nav-gap);
+			justify-content: space-between;
+			align-items: center;
+			height: 100%;
+		}
+
+		.title-wrapper {
+			overflow: clip;
+			padding: 0.25rem;
+			margin: -0.25rem;
+			min-width: 0;
+		}
+
+		.center-column {
+			gap: 10rem;
+			align-items: center;
+		}
+
+		.right-group,
+		.social-icons {
+			gap: 1rem;
+			align-items: center;
+		}
+		.social-icons::after {
+			content: '';
+			height: 2rem;
+			border-inline-end: 1px solid var(--sl-color-gray-5);
+		}
+
+		/* 语言导航 */
+		.lang-nav {
+			gap: 0;
+			align-items: center;
+		}
+		.lang-tab {
+			display: inline-flex;
+			align-items: center;
+			padding: 0.5rem 0.75rem;
+			font-size: var(--sl-text-sm);
+			font-weight: 500;
+			color: var(--sl-color-gray-3);
+			text-decoration: none;
+			position: relative;
+			transition: color 0.15s;
+			white-space: nowrap;
+		}
+		.lang-tab::after {
+			content: '';
+			position: absolute;
+			bottom: 0;
+			left: 0.5rem;
+			right: 0.5rem;
+			height: 2px;
+			background: transparent;
+			border-radius: 1px;
+			transition: background 0.15s;
+		}
+		.lang-tab:hover {
+			color: var(--sl-color-gray-2);
+		}
+		.lang-tab:hover::after {
+			background: var(--sl-color-gray-4);
+		}
+		.lang-tab.active {
+			color: var(--sl-color-white);
+		}
+		.lang-tab.active::after {
+			background: var(--sl-color-accent);
+		}
+
+		@media (min-width: 50rem) {
+			:global(:root[data-has-sidebar]) {
+				--__sidebar-pad: calc(2 * var(--sl-nav-pad-x));
+			}
+			:global(:root:not([data-has-toc])) {
+				--__toc-width: 0rem;
+			}
+			.header {
+				--__sidebar-width: max(0rem, var(--sl-content-inline-start, 0rem) - var(--sl-nav-pad-x));
+				--__main-column-fr: calc(
+					(
+							100% + var(--__sidebar-pad, 0rem) - var(--__toc-width, var(--sl-sidebar-width)) -
+								(2 * var(--__toc-width, var(--sl-nav-pad-x))) - var(--sl-content-inline-start, 0rem) -
+								var(--sl-content-width)
+						) / 2
+				);
+				display: grid;
+				grid-template-columns:
+					/* 1: site title */
+					minmax(
+						calc(var(--__sidebar-width) + max(0rem, var(--__main-column-fr) - var(--sl-nav-gap))),
+						auto
+					)
+					/* 2: search + lang nav */
+					1fr
+					/* 3: right items */
+					auto;
+				align-content: center;
+			}
+		}
+	}
+</style>

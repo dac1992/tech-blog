@@ -1,40 +1,62 @@
 ---
-title: Welcome to Starlight
-description: Get started building your docs site with Starlight.
-
+title: 技术博客
+description: 专注后端编程语言的技术博客，涵盖 Java、Rust、Go、Python 四大技术栈
+template: splash
 hero:
-  tagline: Congrats on setting up a new Starlight project!
-  image:
-    file: ../../assets/houston.webp
+  tagline: 深入浅出，探索后端编程语言的核心技术与最佳实践
   actions:
-    - text: Example Guide
-      link: /guides/example/
+    - text: 开始阅读
+      link: /java/overview/
       icon: right-arrow
-    - text: Read the Starlight docs
-      link: https://starlight.astro.build
-      icon: external
-      variant: minimal
 ---
 
-import { Card, CardGrid } from '@astrojs/starlight/components';
+## 探索技术栈
 
-## Next steps
+<div class="lang-grid">
 
-<CardGrid stagger>
-	<Card title="Update content" icon="pencil">
-		Edit `src/content/docs/index.mdx` to see this page change.
-	</Card>
-	<Card title="Change page layout" icon="document">
-		Delete `template: splash` in `src/content/docs/index.mdx` to display a
-		sidebar on this page.
-	</Card>
-	<Card title="Add new content" icon="add-document">
-		Add Markdown or MDX files to `src/content/docs` to create new pages.
-	</Card>
-	<Card title="Configure your site" icon="setting">
-		Edit your `sidebar` and other config in `astro.config.mjs`.
-	</Card>
-	<Card title="Read the docs" icon="open-book">
-		Learn more in [the Starlight Docs](https://starlight.astro.build/).
-	</Card>
-</CardGrid>
+<a href="/java/overview/" class="lang-card">
+  <div class="lang-header">
+    <span class="lang-icon java">☕</span>
+    <span class="lang-title">Java</span>
+  </div>
+  <p class="lang-desc">企业级开发首选语言，生态成熟、框架丰富。从基础语法到并发编程，从 Spring Boot 到 MyBatis，全面掌握 Java 技术体系。</p>
+  <span class="lang-link">开始学习 →</span>
+</a>
+
+<a href="/rust/overview/" class="lang-card">
+  <div class="lang-header">
+    <span class="lang-icon rust">⚙️</span>
+    <span class="lang-title">Rust</span>
+  </div>
+  <p class="lang-desc">零成本抽象与内存安全的完美结合。所有权系统、模式匹配、Actix/Axum 异步框架，打造高性能系统级应用。</p>
+  <span class="lang-link">开始学习 →</span>
+</a>
+
+<a href="/go/overview/" class="lang-card">
+  <div class="lang-header">
+    <span class="lang-icon go">🚀</span>
+    <span class="lang-title">Go</span>
+  </div>
+  <p class="lang-desc">简洁高效的云原生语言。内置并发原语、Gin/Echo Web 框架、Gorm ORM，快速构建高并发服务。</p>
+  <span class="lang-link">开始学习 →</span>
+</a>
+
+<a href="/python/overview/" class="lang-card">
+  <div class="lang-header">
+    <span class="lang-icon python">🐍</span>
+    <span class="lang-title">Python</span>
+  </div>
+  <p class="lang-desc">灵活优雅的通用语言。FastAPI、Django、Flask 三大框架并行，异步编程与数据科学双线发展。</p>
+  <span class="lang-link">开始学习 →</span>
+</a>
+
+</div>
+
+## 内容结构
+
+每个技术栈都按照统一的知识体系组织：
+
+- **概览** — 语言定位、核心特性与应用场景
+- **基础语法** — 类型系统、控制流、核心语法特性
+- **常用框架** — 主流 Web 框架、ORM、工具链实战
+- **进阶专题** — 并发编程、性能优化、设计模式等深度内容

@@ -1,0 +1,90 @@
+---
+import SidebarSublist from '@astrojs/starlight/components/SidebarSublist.astro';
+import MobileMenuFooter from 'virtual:starlight/components/MobileMenuFooter';
+
+const { sidebar } = Astro.locals.starlightRoute;
+const currentPath = Astro.url.pathname;
+
+const LANGS = [
+	{ label: 'Java', key: 'java', href: '/java/overview/' },
+	{ label: 'Rust', key: 'rust', href: '/rust/overview/' },
+	{ label: 'Go', key: 'go', href: '/go/overview/' },
+	{ label: 'Python', key: 'python', href: '/python/overview/' },
+];
+
+function getActiveLang(path: string): string | null {
+	for (const lang of LANGS) {
+		if (path.startsWith(`/${lang.key}/`)) return lang.key;
+	}
+	return null;
+}
+
+const activeLang = getActiveLang(currentPath);
+
+// 从全量侧边栏中提取当前语言的子分类
+let filteredSidebar = sidebar;
+if (activeLang) {
+	const langGroup = sidebar.find(
+		(entry) => entry.type === 'group' && entry.label.toLowerCase() === activeLang,
+	);
+	if (langGroup && 'entries' in langGroup) {
+		filteredSidebar = langGroup.entries;
+	}
+} else {
+	// 首页不显示任何语言分类
+	filteredSidebar = [];
+}
+---
+
+<!-- 移动端语言导航（桌面端在 Header 中显示） -->
+<nav class="lang-nav-mobile md:sl-hidden" aria-label="选择编程语言">
+	{LANGS.map((lang) => (
+		<a
+			href={lang.href}
+			class:list={['lang-tab-m', { active: lang.key === activeLang }]}
+			aria-current={lang.key === activeLang ? 'true' : undefined}
+		>
+			{lang.label}
+		</a>
+	))}
+</nav>
+
+<div class="sidebar-body">
+	<SidebarSublist sublist={filteredSidebar} />
+</div>
+
+<div class="md:sl-hidden">
+	<MobileMenuFooter />
+</div>
+
+<style>
+	.lang-nav-mobile {
+		display: flex;
+		gap: 0;
+		padding: 0.5rem var(--sl-sidebar-pad-x) 0.25rem;
+		border-bottom: 1px solid var(--sl-color-hairline-light);
+	}
+	.lang-tab-m {
+		display: inline-flex;
+		align-items: center;
+		padding: 0.35rem 0.65rem;
+		font-size: var(--sl-text-xs);
+		font-weight: 500;
+		color: var(--sl-color-gray-3);
+		text-decoration: none;
+		border-radius: 0.25rem;
+		transition: background-color 0.15s, color 0.15s;
+		white-space: nowrap;
+	}
+	.lang-tab-m:hover {
+		background-color: var(--sl-color-gray-6);
+		color: var(--sl-color-gray-2);
+	}
+	.lang-tab-m.active {
+		background-color: var(--sl-color-accent-low);
+		color: var(--sl-color-white);
+	}
+	.sidebar-body {
+		padding-top: 0.5rem;
+	}
+</style>
